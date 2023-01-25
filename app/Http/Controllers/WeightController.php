@@ -37,10 +37,7 @@ class WeightController extends Controller
     }
 
     public function postRecordWeight(Request $req){
-
-        http_response_code(500);
-        dd("test");
-
+        
         $validator = Validator::make($req->all(), 
             [   'weight' => 'required|integer',
                 'name' => 'required'
