@@ -51,6 +51,10 @@
                         @else
 
                             <li class="nav-item">
+                                <a class="nav-link" data-bs-toggle="modal" data-bs-target="#recordingsModal" style="cursor: pointer;">{{ __('Weight recordings') }}</a>
+                            </li>
+
+                            <li class="nav-item">
                                 <a class="nav-link" data-bs-toggle="modal" data-bs-target="#exampleModal" style="cursor: pointer;">{{ __('Record weight') }}</a>
                             </li>
 

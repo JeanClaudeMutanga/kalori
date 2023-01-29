@@ -38,7 +38,7 @@
             @endif
 
             <div>
-                <h3 class="text-grey">{{__('Kalori')}}</h3>
+                <h1 class="text-9xl text-gray-400 font-bold">{{__('Kalori')}}</h1>
             </div>
         </div>
     </body>
