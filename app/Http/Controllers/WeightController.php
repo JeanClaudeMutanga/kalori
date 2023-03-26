@@ -17,7 +17,28 @@ class WeightController extends Controller
         
         $user_id = \Auth::user()->id;
         $sql = "select * from weights where user_id = $user_id order by created_at asc";
-        $weight = \DB::connection('mysql')->select($sql);
+        
+        $weight = [];
+        $table = \DB::connection('mysql')->select($sql);
+        if(count($table )){
+            foreach($table  as $w){
+
+                $w->display_stat = 0;
+                $w->weight_gain_status = NULL;
+
+                if($w->weight_gain != 0){
+                    $w->weight_gain_status = true;
+                    $w->display_stat = $w->weight_gain;
+                }
+
+                if($w->weight_loss != 0){
+                    $w->weight_gain_status = false;
+                    $w->display_stat = $w->weight_loss;
+                }
+
+                array_push($weight,$w);
+            }
+        }
 
         //weight stats
         $avarage_daily = 0;
@@ -25,15 +46,29 @@ class WeightController extends Controller
         $avarage_monthly = 0;
         $avarage_yearly = 0;
 
+        //daily avarage
+        $first_recording = Weight::first();
+        $last_recording = Weight::orderBy('created_at','desc')->first();
+
+        if($first_recording && $last_recording){
+            $last_recording_day = \Carbon\Carbon::parse($last_recording->created_at);
+            $total_days = $last_recording_day->diffInDays($first_recording->created_at);
+            //dd($total_days);
+        }
+
+
+        $w = Weight::first();
+        $d = (array)(\Carbon\Carbon::parse($w->created_at)->getTimezone());
+
         $stats = [
             'daily' => $avarage_daily,
             'weekly' => $avarage_weekly,
             'monthly' => $avarage_monthly,
-            'yearly' => $avarage_yearly
+            'yearly' => $avarage_yearly,
         ];
 
         $user = \Auth::user();
-        return response()->json(['weight_recordings' => $weight,'user' => $user, 'quick_stats' => $stats]);
+        return response()->json(['weight_recordings' => $weight,'user' => $user, 'quick_stats' => $stats , 'timezone' => $d['timezone']]);
     }
 
     public function postRecordWeight(Request $req){

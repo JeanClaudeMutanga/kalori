@@ -46,6 +46,9 @@
             </div>
         </div>
 
+        <div class="row">
+            
+        </div>
 
         <!-- Modal -->
         <div class="modal fade" id="exampleModal" data-bs-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -101,9 +104,9 @@
                                 <td class="text-end">{{wt.weight}}</td>
 
                                 <!---Weight changes-->
-                                <td v-if="wt.weight_gain > 0" class="text-danger text-end">+{{wt.weight_gain}}</td>
-                                <td v-else-if="wt.weight_loss > 0" class="text-success text-end"> -{{wt.weight_loss}}</td>
-                                <td v-else class="text-primary text-end">0</td>
+                                <td v-if="wt.weight_gain_status == true" class="text-danger text-end">+{{wt.display_stat}}</td>
+                                <td v-else-if="wt.weight_gain_status == false" class="text-success text-end"> {{wt.display_stat}}</td>
+                                <td v-else class="text-primary text-end">{{wt.display_stat}}</td>
 
                                 <td>{{wt.created_at}}</td>
                             </tr>
@@ -124,6 +127,7 @@
 
 <script>
     export default {
+
         data() {
             return {
                 user:{},
@@ -134,7 +138,7 @@
                 post_errors:[],
                 error_length:0,
                 recorded:false,
-                error_message:null
+                error_message:null,
             }
         },
         mounted() {
@@ -161,6 +165,7 @@
                 this.error_message = null
                 axios.post('api/postWeight',{weight : this.weight}).then((reponse=>{
                     this.recorded  = true
+                    this.loadData()
                 })).catch((error=>{
                     this.recorded  = false
                     if(error.response.status == 422){
