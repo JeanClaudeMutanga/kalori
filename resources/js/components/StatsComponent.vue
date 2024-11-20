@@ -141,6 +141,15 @@
                 error_message:null,
             }
         },
+        computed:{
+            arrange(){
+                let arr = this.weights;
+                
+                return arr.slice().sort(function(a, b) {
+                    return a.weight - b.weight;
+                });
+            }
+        },
         mounted() {
             this.loadData()
         },
